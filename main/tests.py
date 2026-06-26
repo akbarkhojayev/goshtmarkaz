@@ -41,6 +41,38 @@ class OrderApiTests(TestCase):
         self.assertEqual(Order.objects.count(), 1)
         self.assertEqual(Order.objects.first().items.count(), 1)
 
+    def test_create_order_normalizes_phone(self):
+        response = self.client.post(
+            "/api/orders/",
+            {
+                "name": "Ali Valiyev",
+                "phone": "+998 90 123-45-67",
+                "address": "Rishton",
+                "payment": "naqd",
+                "items": [{"product_id": self.product.id, "quantity": 1}],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["customer"]["phone"], "+998901234567")
+
+    def test_create_order_rejects_invalid_phone(self):
+        response = self.client.post(
+            "/api/orders/",
+            {
+                "name": "Ali Valiyev",
+                "phone": "901234567",
+                "address": "Rishton",
+                "payment": "naqd",
+                "items": [{"product_id": self.product.id, "quantity": 1}],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("phone", response.data)
+
     @override_settings(TELEGRAM_ADMIN_CHAT_ID="fallback-chat")
     def test_admin_panel_chat_ids_are_used_before_env_fallback(self):
         TelegramAdmin.objects.create(name="Asosiy admin", chat_id="12345", is_active=True)

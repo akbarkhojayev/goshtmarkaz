@@ -10,9 +10,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="API",
+        title="AZIM Marinade API",
         default_version='v1',
-        description="API",
+        description=(
+            "AZIM Marinade go'sht markazi uchun mahsulotlar, mijozlar va "
+            "Telegram xabarnomali buyurtmalar API hujjati."
+        ),
+        contact=openapi.Contact(name="AZIM Marinade"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -23,7 +27,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('token/', TokenObtainPairView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
+    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger.yaml', schema_view.without_ui(cache_timeout=0), name='schema-yaml'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0)),
 ]
 
 if settings.DEBUG:

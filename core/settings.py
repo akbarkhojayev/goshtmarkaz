@@ -142,10 +142,17 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
             'type': 'apiKey',
+            'description': "JWT tokenni shu formatda kiriting: Bearer <access_token>",
             'name': 'Authorization',
             'in': 'header',
         }
-    }
+    },
+    'USE_SESSION_AUTH': False,
+    'DOC_EXPANSION': 'list',
+    'OPERATIONS_SORTER': 'alpha',
+    'TAGS_SORTER': 'alpha',
+    'DEFAULT_MODEL_RENDERING': 'model',
+    'DISPLAY_OPERATION_ID': False,
 }
 
 MEDIA_URL = '/media/'
